@@ -1,4 +1,19 @@
-'use strict';
+'use strict'; 
+const weekdays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+const openingHours = {
+    [weekdays[3]]: {
+        open: 12,
+        close: 22,
+    },
+    [weekdays[4]]: {
+        open: 11,
+        close: 23,
+    },
+    [weekdays[5]]: {
+        open: 0, // Open 24 hours 
+        close: 24,
+    },
+};
 
 const restaurant = {
     name: 'Classico Italiano',
@@ -6,36 +21,78 @@ const restaurant = {
     categories: ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'],
     starterMenu: ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad'],
     mainMenu: ['Pizza', 'Pasta', 'Risotto'],
-    openingHours: {
-        thu: {
-            open: 12,
-            close: 22,
-        },
-        fri: {
-            open: 11,
-            close: 23,
-        },
-        sat: {
-            open: 0, // Open 24 hours
-            close: 24,
-        },
-    },
-
-    order: function (starterIndex, mainIndex) {
+    //ES6 enchanced object literals 
+    openingHours,
+    order(starterIndex, mainIndex) {
         return [this.starterMenu[starterIndex], this.mainMenu[mainIndex]];
     },
-    orderDelivery: function ({ starterIndex = 0, mainIndex = 1, time = '20:00', address }) {
+    orderDelivery({ starterIndex = 0, mainIndex = 1, time = '20:00', address }) {
         console.log(`Order recieved ! ${this.starterMenu[starterIndex]} and ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${time}`);
     },
-    orderPasta: function (ing1, ing2, ing3) {
+    orderPasta(ing1, ing2, ing3) {
         console.log(`Here is your declicious pasta with ${ing1}, ${ing2} and ${ing3}`);
     },
-    orederPizza : function(ingredient, ...otherIngredients){
+    orederPizza(ingredient, ...otherIngredients) {
         console.log(ingredient);
         console.log(otherIngredients);
     }
 };
 
+//Property NAMES
+const properties = Object.keys(openingHours);
+console.log(properties);
+
+let openStr = `We are open on ${properties.length} days:`;
+
+for (const day of properties) {
+    openStr += `${day},`;
+}
+console.log(openStr);
+
+//property VALUES
+const values = Object.values(openingHours);
+console.log(values);
+
+//Entire object 
+const entries = Object.entries(openingHours);
+//console.log(entries);
+//[key, value]
+for(const [day, {open, close}] of entries){
+    console.log(`On ${day} we open at ${open} and close at ${close}`);
+}
+
+/* 
+if(restaurant.hours && restaurant.hours.mon) 
+console.log(restaurant.hours.mon.open); 
+//restaurant.hours.fri && console.log(restaurant.hours.fri.open); 
+//WITH optional chaining  
+//console.log(restaurant.hours.mon.open); //Uncaught TypeError: Cannot read properties of undefined (reading 'open') 
+console.log(restaurant.hours.mon?.open); 
+console.log(restaurant.hours?.mon?.open); 
+const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun' ]; 
+for(const day of days ) { 
+    console.log(day); 
+    const open = restaurant.hours[day]?.open ?? 'closed'; 
+    console.log(`on ${day}, we open at ${open}`); 
+} 
+//Methods 
+console.log(restaurant.order?.(0,1) ?? 'Method does not exits'); 
+console.log(restaurant.orderRisatto?.(0,1) ?? 'Method does not exits'); 
+//Arrays 
+ const users = []; 
+// const users = [ 
+//     {userName : 'Manish', email : 'test@gmail.com'} 
+// ]; 
+//ES6 Way 
+console.log('-------ES6----------'); 
+console.log(users[0]?.userName ?? 'User array empty'); 
+//Traditional way 
+console.log('-------Traditional----------') 
+if (users.length > 0) { 
+    console.log(users[0].userName); 
+} 
+else { console.log('user array empty'); } 
+/*
 const menu = [...restaurant.starterMenu, ...restaurant.mainMenu];
 console.log(menu);
 for(const item of menu) console.log(item);
@@ -43,45 +100,35 @@ for (const item of menu.entries()){
     console.log(item);
 }
 //console.log([...menu.entries()]);
-
 for(const item of menu.entries()){
     console.log(`${item[0]+1}: ${item[1]}`);
 }
-
 console.log('-------Morden Way -------')
 //Modern way wrritting this loop using destructuring
 for(const [i, el] of menu.entries()){
     console.log(`${i + 1} : ${el}`);
 }
-
 /*
 const rest1 = {
     name :'Barbeque Nation',
     numGuests : 20
 }
-
 const rest2 = {
     name :'The Legend Restaurant',
     owner : 'John Smith'
 }
-
 //OR assignment operator
 rest1.numGuests = rest1.numGuests || 10;
 rest2.numGuests = rest2.numGuests || 10;
-
 rest1.numGuests ||= 10;
 rest2.numGuests ||= 10;
-
 console.log(rest1);
 console.log(rest2);
-
-
 /*
 restaurant.numGuests =0;
 const guests2 = restaurant.numGuests || 10;
 console.log(guests2);//10
 //Null : null and undefined (NOT 0 or ' ')
-
 const guestsCorrect = restaurant.numGuests ?? 10;
 console.log(guestsCorrect);//0
 /*
